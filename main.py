@@ -9,55 +9,74 @@ class Grafo():
   
     def __init__(self, vertices): 
         self.V = vertices 
-        self.grafo = [[0 for column in range(vertices)]  
-                    for row in range(vertices)]
+        self.grafo = [[0 for coluna in range(vertices)]  
+                    for linha in range(vertices)]
 
 
-    def printResultado(self, dist): 
-        print("Vértice \tDistância até source")
-        for node in range(self.V): 
-            print("  ", node, "\t\t\t", dist[node]) 
-  
+    def minDistancia(self,dist,fila): 
 
-    def minDistancia(self, dist, ArvMenorCaminho): 
-  
-        min = sys.maxsize 
-  
-        for v in range(self.V): 
-            if dist[v] < min and ArvMenorCaminho[v] == False: 
-                min = dist[v] 
-                min_ind = v 
-  
+        min = float("Inf") 
+        min_ind = -1
+         
+        for i in range(len(dist)): 
+            if dist[i] < min and i in fila: 
+                min = dist[i] 
+                min_ind = i 
         return min_ind 
   
 
-    def dijkstra(self, src): 
+    def printCaminho(self, parent, j): 
+
+        if parent[j] == -1:
+            print(j, ", ", end='')
+            return
+        self.printCaminho(parent , parent[j]) 
+        print(j, ", ", end='') 
+          
+ 
+    def printResultado(self, dist, parent, src):
+
+        print("Vértice \tDistância até Source\tCaminho") 
+        for i in range(1, len(dist)): 
+            print("\n%d --> %d \t\t  %d \t\t " % (src, i, dist[i]), end='') 
+            self.printCaminho(parent,i)
+            print("")
   
-        dist = [sys.maxsize] * self.V 
+
+    def dijkstra(self, grafo, src): 
+  
+        linha  = len(grafo) 
+        coluna = len(grafo) 
+   
+        dist = [float("Inf")] * linha 
+        parent = [-1] * linha 
         dist[src] = 0
-        ArvMenorCaminho = [False] * self.V 
+      
+        fila = [] 
+        for i in range(linha): 
+            fila.append(i) 
+ 
+        while fila: 
   
-        for _ in range(self.V): 
+            u = self.minDistancia(dist,fila)       
+            fila.remove(u) 
 
-            u = self.minDistancia(dist, ArvMenorCaminho) 
-            ArvMenorCaminho[u] = True
-
-            for v in range(self.V): 
-                if self.grafo[u][v] > 0 and ArvMenorCaminho[v] == False and \
-                dist[v] > dist[u] + self.grafo[u][v]: 
-                    dist[v] = dist[u] + self.grafo[u][v] 
+            for i in range(coluna):
+                if grafo[u][i] and i in fila: 
+                    if dist[u] + grafo[u][i] < dist[i]: 
+                        dist[i] = dist[u] + grafo[u][i] 
+                        parent[i] = u 
   
-        self.printResultado(dist)  
+  
+        # print the constructed distance array 
+        self.printResultado(dist,parent,src)  
 
 
+root = Tk()
+root.title("Algoritmos Ambiciosos x Programação Dinâmica")
 
-if __name__ == '__main__':
-
-    root = Tk()
-    root.title("Algoritmos Ambiciosos x Programação Dinâmica")
-
-    g = Grafo(9) 
-    g.grafo = [[0, 4, 0, 0, 0, 0, 0, 8, 0], 
+g = Grafo(9) 
+g.grafo = [[0, 4, 0, 0, 0, 0, 0, 8, 0], 
                [4, 0, 8, 0, 0, 0, 0, 11, 0], 
                [0, 8, 0, 7, 0, 4, 0, 0, 2], 
                [0, 0, 7, 0, 9, 14, 0, 0, 0], 
@@ -68,7 +87,9 @@ if __name__ == '__main__':
                [0, 0, 2, 0, 0, 0, 6, 7, 0] 
               ];
 
-    g.dijkstra(3)
+g.dijkstra(g.grafo,0)
+
+exit()
 
 
-    root.mainloop()
+root.mainloop()
