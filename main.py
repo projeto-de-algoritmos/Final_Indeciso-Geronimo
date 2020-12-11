@@ -1,10 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
-import os
+from os import system, name 
 import sys
 from timeit import default_timer as timer
-import matplotlib.pyplot as plt 
 
 class Grafo(): 
   
@@ -40,13 +39,14 @@ class Grafo():
         print(j, ", ", end='')
           
  
-    def printResultado(self, dist, parent, src):
+    def printResultado(self, dist, parent, src, destination):
 
-        print("Vértice \tDistância até Source\tCaminho") 
-        for i in range(1, len(dist)): 
-            print("%d --> %d \t\t  %d \t\t " % (src, i, dist[i]), end='') 
-            self.printCaminho(parent,i)
-            print("")
+        print("[Informações Detalhadas]")
+
+        print("\nVértices \tDistância até Source\tCaminho") 
+        print("%d --> %d \t\t  %d \t\t " % (src, destination, dist[destination]), end='') 
+        self.printCaminho(parent,destination)
+        print("")
   
 
     def dijkstra(self, src, destination): 
@@ -74,8 +74,8 @@ class Grafo():
                         parent[i] = u 
   
   
-        #self.printResultado(dist,parent,src)
-        return str(dist[destination]), parent
+        self.printResultado(dist,parent,src,destination)
+        return str(dist[destination])
 
 
     def printArr(self, dist, destination):
@@ -83,6 +83,7 @@ class Grafo():
         print("Vértice \tDistância até Source")  
         for i in range(1, self.V):  
             print("{0} \t\t\t  {1}".format(i, dist[destination]))
+
 
 
     def BellmanFord(self, src, destination):  
@@ -98,7 +99,19 @@ class Grafo():
 
         return str(dist[destination])
 
-    
+
+def clear(): 
+      
+    # for windows 
+    if name == 'nt': 
+        _ = system('cls') 
+  
+    # for mac and linux(here, os.name is 'posix') 
+    else: 
+        _ = system('clear')
+
+
+  
 
 g = Grafo(9)
 g.addEdge(0, 1, 4)
@@ -167,12 +180,21 @@ imgLabel.pack(padx=35)
 def buscar():
     origem = int(opc_origem.get())
     destino = int(opc_destino.get())
-    
-    dijkstra, parent = g.dijkstra(origem, destino)
-    bellmanford = g.BellmanFord(origem, destino)
+    clear()
 
-    resultDijkstra.config(text=dijkstra)
-    resultBellmanFord.config(text=bellmanford)
+    start = timer()
+    g.dijkstra(origem, destino)
+    end = timer()
+    time_dijkstra = float("{:.6f}".format(end - start))
+
+    start = timer()
+    resultadoLabel.config(text="\nA Distância mais curta entre os pontos é: "
+                                + g.BellmanFord(origem, destino))
+    end = timer()
+    time_bellmanford = float("{:.6f}".format(end - start))
+
+    resultDijkstra.config(text=time_dijkstra + " seg")
+    resultBellmanFord.config(text=time_bellmanford + " seg")
 
 
 label = Label(text="\n\nEscolha o ponto de início:\n")
@@ -184,7 +206,7 @@ opc_origem.set(options[0])
 possiveis_nos = OptionMenu(root, opc_origem, *options)
 possiveis_nos.pack(padx=100)
 
-label = Label(text="Escolha o ponto de destino:\n")
+label = Label(text="\nEscolha o ponto de destino:\n")
 label.pack()
 options = range(0,9)
 opc_destino = StringVar()
@@ -193,33 +215,34 @@ opc_destino.set(options[0])
 possiveis_nos = OptionMenu(root, opc_destino, *options)
 possiveis_nos.pack(padx=100)
 
+label = Label(
+    text="")
+label.pack()
+
 fazerBuscas = Button(root, text="Gerar caminho mais curto", command=buscar)
-fazerBuscas.pack(pady=20)
+fazerBuscas.pack(pady=10)
 
 label = Label(
     text="_________________________________________________________________")
 label.pack()
 
-label = Label(
-    text="\nRESULTADOS")
-label.pack()
+global resultadoLabel
+resultadoLabel = Label(root, text="\nDistância mais curta entre os pontos é: ")
+resultadoLabel.pack()
 
-DijkstraLabel = Label(root, text="\nDijkstra:", pady=5)
+DijkstraLabel = Label(root, text="\nTempo levado pelo Dijkstra:", pady=5)
 DijkstraLabel.pack()
 global resultDijkstra
 resultDijkstra = Label(root, text="", wraplength=600, pady=5, padx=20)
 resultDijkstra.pack()
 
-BellmanFordLabel = Label(root, text="BellmanFord:", pady=5)
+BellmanFordLabel = Label(root, text="Tempo levado pelo BellmanFord:", pady=5)
 BellmanFordLabel.pack()
 global resultBellmanFord
 resultBellmanFord = Label(root, text="", wraplength=600, pady=5, padx=20)
 resultBellmanFord.pack()
 
-CaminhoLabel = Label(root, text="Caminho percorrido:", pady=5)
+CaminhoLabel = Label(root, text="(Após execução, visualize o caminho percorrido no terminal.)", pady=5)
 CaminhoLabel.pack()
-global Caminho
-Caminho = Label(root, text="", wraplength=600, pady=5, padx=20)
-Caminho.pack()
 
 root.mainloop()
