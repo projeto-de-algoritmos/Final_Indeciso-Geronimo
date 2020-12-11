@@ -165,13 +165,13 @@ g.grafo = [ [0, 4, 0, 0, 0, 0, 0, 8, 0],   # 0
 
 
 root = Tk()
-root.geometry("600x860")
+root.geometry("600x865")
 root.title("Algoritmos Ambiciosos x Programação Dinâmica")
 
-subtitulo = Label(root, text="\nBairo São Bernardo\n")
+subtitulo = Label(root, text="\nBairo São Valentim\n")
 subtitulo.pack()
 
-imagem = Image.open("image.png").resize((530, 300), Image.ANTIALIAS)
+imagem = Image.open("images/image.png").resize((530, 300), Image.ANTIALIAS)
 imagem = ImageTk.PhotoImage(imagem)
 imgLabel = Label(image=imagem)
 imgLabel.pack(padx=35)
@@ -193,8 +193,8 @@ def buscar():
     end = timer()
     time_bellmanford = float("{:.6f}".format(end - start))
 
-    resultDijkstra.config(text=time_dijkstra + " seg")
-    resultBellmanFord.config(text=time_bellmanford + " seg")
+    resultDijkstra.config(text=str(time_dijkstra) + " seg")
+    resultBellmanFord.config(text=str(time_bellmanford) + " seg")
 
 
 label = Label(text="\n\nEscolha o ponto de início:\n")
@@ -227,7 +227,7 @@ label = Label(
 label.pack()
 
 global resultadoLabel
-resultadoLabel = Label(root, text="\nDistância mais curta entre os pontos é: ")
+resultadoLabel = Label(root, text="\nA Distância mais curta entre os pontos é: ")
 resultadoLabel.pack()
 
 DijkstraLabel = Label(root, text="\nTempo levado pelo Dijkstra:", pady=5)
