@@ -9,6 +9,10 @@
 
 ## Sobre
 
+### Vídeo Explicativo
+
+https://youtu.be/3ud-KIR9Hms
+
 Platão, Dijkstra e BellmanFord são 3 amigos e estudiosos da matemática e constantemente gostam de desafiar uns aos outros. Certa noite, os três estavam em um bar e um desafio foi lançado: dada a localização de todos os bares do bairro em que estavam, quem criasse o algoritmo mais eficiente e rápido que medisse a menor distância entre dois bares arbitrários e o menor trajeto que deveria ser tomado para caminhar de um até outro, ganharia.
 
 <br> ![](images/image.png) <br>
